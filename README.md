@@ -1,6 +1,6 @@
 # 📊 Simple Logistic Regression – R ioslides Presentation
 
-This project is an ioslides presentation built in R as part of a class assignment. The topic covered is **simple logistic regression**, demonstrated using R, ggplot2 visualizations, and LaTeX math.
+This project is an ioslides presentation built in R. The topic covered is **simple logistic regression**, demonstrated using R, ggplot2 visualizations, and LaTeX math.
 
 ## 📁 Files
 - `SimpleLinearRegressionPresentation.Rmd`: R Markdown source file for the ioslides presentation
