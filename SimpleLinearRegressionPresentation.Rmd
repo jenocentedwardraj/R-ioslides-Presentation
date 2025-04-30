@@ -1,0 +1,209 @@
+---
+title: "Simple Linear Regression"
+author: "Jenocent Edwardraj"
+date: "2024-09-22"
+output:
+  ioslides_presentation: default
+---
+
+<style type="text/css">
+body p, div, h1, h2, h3, h4, h5 {
+  color: black;
+  font-family: Modern Computer Roman;
+}
+slides > slide.title-slide hgroup h1 {
+  color: #8C1D40;
+}
+h2 {
+  color: #8C1D40;
+}
+</style>
+
+# 1: Title and Introduction
+
+## (Part 1) - Simple Linear Regression
+
+### What is Simple Linear Regression?
+
+
+Simple Linear Regression is a statistical method used to understand and model the relationship between two variables: 
+
+- **One independent variable** (predictor, denoted as \( x \)).
+
+- **One dependent variable** (response, denoted as \( y \)).
+
+It assumes that there is a linear relationship between the two variables, which can be represented by a straight line.
+
+## (Part 2) - Why is it Important?
+
+Linear regression is one of the most fundamental and widely used techniques in data analysis. It helps in:
+
+- Predicting values of the dependent variable based on the independent variable.
+
+- Understanding the strength and nature of the relationship between the two variables.
+
+- Making future predictions, business decisions, or solving real-world problems.
+
+## (Part 3) - Applications
+
+- **Finance**: Predicting stock prices based on historical data.
+
+- **Economics**: Forecasting economic indicators such as inflation or GDP.
+
+- **Biology**: Modeling the relationship between a drug dosage and patient recovery rate.
+
+- **Engineering**: Estimating material strength as a function of load applied.
+
+
+# 2: Definition of Simple Linear Regression
+
+## (Part 1) - How does Simple Linear Regression Work?
+
+Simple linear regression models the relationship between two variables by fitting a linear equation to observed data. The model tries to minimize the difference between the observed values and the values predicted by the linear equation.
+
+## (Part 2) - Equation
+The equation for Simple Linear Regression is:
+
+\[
+y = \beta_0 + \beta_1 x + \epsilon
+\]
+
+Where:
+
+- \( y \) is the **dependent variable** (what you are trying to predict).
+
+- \( x \) is the **independent variable** (the predictor).
+
+- \( \beta_0 \) is the **intercept** (the value of \( y \) when \( x = 0 \)).
+
+- \( \beta_1 \) is the **slope** (the rate of change in \( y \) for each unit increase in \( x \)).
+
+- \( \epsilon \) is the **error term** (captures the variability in \( y \) that cannot be explained by the model).
+
+## (Part 3) - Key Concepts
+
+- **Intercept (\( \beta_0 \))**: This is the point where the regression line crosses the y-axis. It represents the expected value of \( y \) when \( x \) is zero.
+  
+- **Slope (\( \beta_1 \))**: This represents the change in the dependent variable for each one-unit change in the independent variable. A positive slope means as \( x \) increases, \( y \) increases, and vice versa.
+  
+- **Residuals**: The difference between observed values and predicted values. Residuals help assess the accuracy of the model.
+
+
+# 3: Assumptions of Simple Linear Regression
+## Assumptions
+
+1. **Linearity**: The relationship between the independent variable \(x\) and the dependent variable \(y\) is linear.
+
+2. **Independence**: Observations are independent of each other.
+
+3. **Homoscedasticity**: The variance of residuals (errors) is constant across all values of the independent variable.
+
+4. **Normality**: Residuals are normally distributed.
+
+5. **No Multicollinearity**: In simple linear regression, we only have one predictor, so this assumption is naturally met.
+
+*Understanding these assumptions is crucial because violations can lead to biased or inefficient estimates.*
+
+# 4: Example Data (ggplot2)
+
+## (Part 1) - Scatterplot with Linear Fit of Generated Data
+
+```{r, message=FALSE, echo = FALSE}
+# Load necessary package
+library(ggplot2)
+
+# Generate random data
+set.seed(123)
+data <- data.frame(x = rnorm(100), y = rnorm(100))
+
+# Scatterplot with linear fit
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Scatterplot with Linear Fit", x = "X", y = "Y") +
+  theme(plot.title = element_text(hjust = 0.5))  # Center the title
+```
+
+## (Part 2) - Description/Explanation
+This scatterplot visualizes the relationship between the independent variable \( x \) and the dependent variable \( y \), with a fitted linear regression line. The model suggests how well the independent variable \( x \) predicts the dependent variable \( y \), capturing any linear trend in the data.
+
+
+# 5: Interactive Plot (Plotly Plot)
+
+## (Part 1) - Interactive Linear Regression Model with Plotly
+```{r, message=FALSE, echo = FALSE}
+# Load necessary package
+library(plotly)
+
+# Fit a linear model
+model <- lm(y ~ x, data = data)
+
+# Predict values based on the model
+data$pred <- predict(model)
+
+# Create interactive plot with plotly
+p <- plot_ly(data, x = ~x, y = ~y, type = "scatter", mode = "markers") %>%
+  add_trace(x = ~x, y = ~pred, mode = "lines", name = "Linear Fit")
+
+# Display the plot
+p
+```
+
+## (Part 2) - Description/Explanation
+The interactive plot allows for dynamic exploration of the relationship between \( x \) and \( y \). You can hover over points to see the precise values and observe the linear trend, making it easier to understand the model's behavior and predictions.
+
+
+# 6: Residuals vs Fitted plot
+
+## (Part 1) - Validating Model Assumptions: Residuals vs Fitted Plot
+```{r, message=FALSE, echo = FALSE}
+ggplot(data, aes(x = model$fitted.values, y = model$residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Residuals vs Fitted", x = "Fitted Values", y = "Residuals") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))  # Center the title
+```
+
+## (Part 2) - Description/Explanation
+This plot is a diagnostic tool to check the assumptions of the linear regression model. The residuals, which are the differences between observed and predicted \( y \) values, should be randomly scattered around zero. This indicates that the model fits the data well, with no obvious patterns in the residuals.
+
+
+# 7: ggplot2 Diagnostic Plot (Residuals Histogram)
+
+## (Part 1) - Histogram of Model Residuals for Diagnostic Evaluation
+```{r, message=FALSE, echo = FALSE}
+# Histogram of residuals
+ggplot(data, aes(x = model$residuals)) +
+  geom_histogram(binwidth = 0.1, fill = "blue", color = "black") +
+  labs(title = "Residual Histogram", x = "Residuals", y = "Frequency") +
+  theme(plot.title = element_text(hjust = 0.5))  # Center the title
+```
+
+## (Part 2) - Description/Explanation
+The histogram shows the distribution of residuals, which helps in assessing whether the residuals are normally distributed. A bell-shaped curve would suggest that the assumption of normality for residuals is met, an important aspect for accurate regression modeling.
+
+
+# 8: Simple R Code for Linear Regression Summary
+
+## (Part 1) - Summary of Linear Regression Model Output
+```{r, message=FALSE, echo = FALSE}
+# Show summary of the linear model
+summary(model)
+```
+
+## (Part 2) - Description/Explanation
+The linear model summary provides statistical insights into the relationship between \( x \) and \( y \). The coefficients, \( \beta_0 \) (intercept) and \( \beta_1 \) (slope), quantify the model's predictions, while the \( R^2 \) value measures the proportion of variance in \( y \) explained by \( x \). A high \( R^2 \) suggests a strong linear relationship between the two variables.
+
+
+# Slide 9: Conclusion
+## Summary of Simple Linear Regression
+- Simple Linear Regression is a foundational technique to model relationships between two variables.
+
+- The model assumes a linear relationship, normally distributed residuals, and constant variance.
+
+- Evaluating residuals through diagnostic plots ensures that the model fits the data appropriately.
+
+- Linear regression serves as a basis for more complex models and helps in making predictions or identifying trends.
+
+
